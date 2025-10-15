@@ -37,7 +37,6 @@ function initializeObservers() {
 // Initialize observers when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initializeObservers();
-});
     
     // Smooth scroll for scroll indicator
     const scrollIndicator = document.querySelector('.scroll-indicator');
@@ -54,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Add hover effects for artworks
+    const artworks = document.querySelectorAll('.artwork');
     artworks.forEach(artwork => {
         artwork.addEventListener('mouseenter', () => {
             artwork.style.transform = 'translateY(-10px) scale(1.02)';
