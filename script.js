@@ -553,6 +553,18 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         // Reinitialize observers after images are loaded
         setTimeout(() => {
             initializeObservers();
+            
+            // Force animation for images in production
+            const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+            if (isProduction) {
+                const artworks = document.querySelectorAll('.artwork');
+                artworks.forEach((artwork, index) => {
+                    setTimeout(() => {
+                        artwork.classList.add('animate');
+                        console.log(`🚀 Production: Forced animation for artwork ${index}`);
+                    }, index * 200); // Stagger the animations
+                });
+            }
         }, 100);
         
     } catch (error) {
