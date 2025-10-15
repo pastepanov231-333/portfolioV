@@ -59,7 +59,7 @@ body {
 }
 
 .hero-welcome {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, serif;
     font-size: clamp(1.4rem, 3.5vw, 2.2rem);
     font-weight: 500;
     color: #fff;
