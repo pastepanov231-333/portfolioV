@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             heroSubtitle.style.animation = 'fadeInUp 1.2s ease-out 0.3s both';
         }, 100);
     }
-});
+);
 
 // Enhanced scroll animations with smooth scrolling synchronization
 let ticking = false;
@@ -555,20 +555,18 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         setTimeout(() => {
             initializeObservers();
             
-            // Force visibility and animation for images in production
+            // Force visibility for images in production, but let CSS animations work
             const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
             if (isProduction) {
                 const artworks = document.querySelectorAll('.artwork');
                 artworks.forEach((artwork, index) => {
-                    // Ensure visibility
+                    // Only ensure visibility, let CSS animations handle the rest
                     artwork.style.visibility = 'visible';
                     
-                    // Create custom animation using inline styles for production
+                    // Add animate class to trigger CSS animations (same as titles)
                     setTimeout(() => {
-                        // Animate to final position
-                        artwork.style.opacity = '1';
-                        artwork.style.transform = 'translateX(0)';
-                        console.log(`🚀 Production: Animated artwork ${index} to final position`);
+                        artwork.classList.add('animate');
+                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
                     }, index * 200); // Stagger the animations
                 });
             }
