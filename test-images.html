@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест изображений</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        .button:hover {
+            background: #0056CC;
+        }
+        .success {
+            background: #34C759;
+        }
+        .error {
+            background: #FF3B30;
+        }
+        .test-image {
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0.5rem;
+            border: 2px solid #333;
+        }
+        .test-image.loaded {
+            border-color: #34C759;
+        }
+        .test-image.failed {
+            border-color: #FF3B30;
+        }
+        .log {
+            background: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Тест загрузки изображений</h1>
+        
+        <div class="test-section">
+            <h3>Прямая загрузка изображений</h3>
+            <button class="button" onclick="testDirectLoad()">Тест прямой загрузки</button>
+            <div id="direct-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Тест через систему портфолио</h3>
+            <button class="button" onclick="testPortfolioSystem()">Тест системы портфолио</button>
+            <div id="portfolio-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Логи</h3>
+            <button class="button" onclick="clearLogs()">Очистить логи</button>
+            <div id="logs" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Ваши файлы:</h3>
+            <div class="code">
+                • images/portraits/photo_2025-10-12_18-52-53.jpg<br>
+                • images/characters/X-zxPb0Srqo.jpg<br>
+                • images/tattoos/3DLO1yqt9mU.jpg<br>
+                • images/tattoos/гоша дракоша.jpg
+            </div>
+        </div>
+        
+        <a href="index.html" style="color: #007AFF; text-decoration: none; margin-top: 2rem; display: block;">
+            ← Вернуться к портфолио
+        </a>
+    </div>
+    
+    <script>
+        function log(message) {
+            const logsDiv = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.innerHTML += `[${timestamp}] ${message}<br>`;
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        async function testDirectLoad() {
+            const resultsDiv = document.getElementById('direct-results');
+            resultsDiv.innerHTML = '<p>Тестируем прямую загрузку...</p>';
+            
+            const images = [
+                { src: 'images/portraits/photo_2025-10-12_18-52-53.jpg', name: 'Портрет' },
+                { src: 'images/characters/X-zxPb0Srqo.jpg', name: 'Персонаж' },
+                { src: 'images/tattoos/3DLO1yqt9mU.jpg', name: 'Татуировка 1' },
+                { src: 'images/tattoos/гоша дракоша.jpg', name: 'Татуировка 2' }
+            ];
+            
+            let html = '<div style="display: flex; flex-wrap: wrap; margin: 1rem 0;">';
+            
+            for (const imgData of images) {
+                const img = new Image();
+                img.className = 'test-image';
+                img.alt = imgData.name;
+                
+                await new Promise((resolve) => {
+                    img.onload = () => {
+                        img.classList.add('loaded');
+                        log(`✅ Загружено: ${imgData.src}`);
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        img.classList.add('failed');
+                        log(`❌ Ошибка загрузки: ${imgData.src}`);
+                        resolve();
+                    };
+                    img.src = imgData.src;
+                });
+                
+                html += `<div style="text-align: center; margin: 0.5rem;">
+                    <img src="${imgData.src}" class="test-image ${img.classList.contains('loaded') ? 'loaded' : 'failed'}" alt="${imgData.name}">
+                    <div style="font-size: 0.8rem; margin-top: 0.5rem;">${imgData.name}</div>
+                </div>`;
+            }
+            
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+        
+        async function testPortfolioSystem() {
+            const resultsDiv = document.getElementById('portfolio-results');
+            resultsDiv.innerHTML = '<p>Тестируем систему портфолио...</p>';
+            
+            try {
+                // Загружаем скрипт портфолио
+                const script = document.createElement('script');
+                script.src = 'script.js';
+                document.head.appendChild(script);
+                
+                await new Promise((resolve) => {
+                    script.onload = resolve;
+                    script.onerror = () => {
+                        log('❌ Ошибка загрузки script.js');
+                        resolve();
+                    };
+                });
+                
+                // Ждем немного для инициализации
+                setTimeout(() => {
+                    if (typeof window.addYourImages === 'function') {
+                        log('✅ Функция addYourImages найдена');
+                        window.addYourImages();
+                        resultsDiv.innerHTML = '<p style="color: #34C759;">✅ Система портфолио работает! Проверьте консоль.</p>';
+                    } else {
+                        log('❌ Функция addYourImages не найдена');
+                        resultsDiv.innerHTML = '<p style="color: #FF3B30;">❌ Система портфолио не работает</p>';
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`);
+                resultsDiv.innerHTML = `<p style="color: #FF3B30;">❌ Ошибка: ${error.message}</p>`;
+            }
+        }
+        
+        // Автоматический тест при загрузке
+        window.addEventListener('load', () => {
+            log('🚀 Страница загружена, начинаем тесты...');
+            setTimeout(() => {
+                testDirectLoad();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

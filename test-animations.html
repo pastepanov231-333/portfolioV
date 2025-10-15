@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест анимаций</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .test-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .test-button {
+            background: #007AFF;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 1rem;
+            font-size: 1.1rem;
+        }
+        .test-button:hover {
+            background: #0056CC;
+        }
+        .test-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 200px);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .test-artwork {
+            aspect-ratio: 4/5;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>Тест анимаций</h1>
+        <p>Нажмите кнопки ниже, чтобы протестировать анимации</p>
+        
+        <button class="test-button" onclick="testTitleAnimation()">Тест анимации заголовка</button>
+        <button class="test-button" onclick="testArtworkAnimation()">Тест анимации изображений</button>
+        <button class="test-button" onclick="resetAnimations()">Сбросить анимации</button>
+    </div>
+
+    <section class="section" id="test-section">
+        <div class="section-title-container">
+            <h2 class="section-title" id="test-title">ТЕСТОВЫЙ ЗАГОЛОВОК</h2>
+        </div>
+        <div class="gallery" id="test-gallery">
+            <div class="artwork test-artwork">1</div>
+            <div class="artwork test-artwork">2</div>
+            <div class="artwork test-artwork">3</div>
+            <div class="artwork test-artwork">4</div>
+            <div class="artwork test-artwork">5</div>
+            <div class="artwork test-artwork">6</div>
+        </div>
+    </section>
+
+    <script>
+        function testTitleAnimation() {
+            const title = document.getElementById('test-title');
+            title.classList.remove('animate');
+            setTimeout(() => {
+                title.classList.add('animate');
+            }, 100);
+        }
+
+        function testArtworkAnimation() {
+            const artworks = document.querySelectorAll('#test-gallery .artwork');
+            artworks.forEach((artwork, index) => {
+                artwork.classList.remove('animate');
+                setTimeout(() => {
+                    artwork.classList.add('animate');
+                }, index * 200);
+            });
+        }
+
+        function resetAnimations() {
+            const title = document.getElementById('test-title');
+            const artworks = document.querySelectorAll('#test-gallery .artwork');
+            
+            title.classList.remove('animate');
+            artworks.forEach(artwork => {
+                artwork.classList.remove('animate');
+            });
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testTitleAnimation();
+                setTimeout(() => {
+                    testArtworkAnimation();
+                }, 1000);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

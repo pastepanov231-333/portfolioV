@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест новой анимации</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .test-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .test-button {
+            background: #007AFF;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 1rem;
+            font-size: 1.1rem;
+        }
+        .test-button:hover {
+            background: #0056CC;
+        }
+        .success {
+            background: #34C759;
+        }
+        .info {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h1>🎨 Тест новой анимации</h1>
+        <p>Проверьте новую систему анимации с плавным выезжанием изображений</p>
+        
+        <button class="test-button" onclick="testAnimation()">Тест анимации</button>
+        <button class="test-button" onclick="addTestImages()">Добавить тестовые изображения</button>
+        <button class="test-button success" onclick="goToPortfolio()">Перейти к портфолио</button>
+        
+        <div class="info">
+            <strong>Новая анимация:</strong><br>
+            • Заголовки появляются первыми при скроллинге<br>
+            • Изображения плавно выезжают с боков синхронизированно со скроллингом<br>
+            • Четные изображения выезжают слева, нечетные справа<br>
+            • Анимация срабатывает при попадании раздела в видимую область<br>
+            • Работает для всех текущих и будущих изображений
+        </div>
+    </div>
+
+    <section class="section" id="test-section">
+        <div class="section-title-container">
+            <h2 class="section-title">ТЕСТОВАЯ АНИМАЦИЯ</h2>
+        </div>
+        <div class="gallery" id="test-gallery">
+            <!-- Тестовые изображения будут добавлены здесь -->
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        function testAnimation() {
+            console.log('🎨 Testing new animation system...');
+            
+            // Add test images
+            const testGallery = document.getElementById('test-gallery');
+            testGallery.innerHTML = '';
+            
+            for (let i = 1; i <= 6; i++) {
+                const artwork = document.createElement('div');
+                artwork.className = 'artwork';
+                artwork.innerHTML = `
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #${Math.floor(Math.random()*16777215).toString(16)} 0%, #${Math.floor(Math.random()*16777215).toString(16)} 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">
+                        ${i}
+                    </div>
+                `;
+                testGallery.appendChild(artwork);
+            }
+            
+            // Apply animations
+            setTimeout(() => {
+                applyAnimationsToNewImages();
+                console.log('✅ Test images created and animations applied');
+            }, 100);
+        }
+        
+        function addTestImages() {
+            console.log('📸 Adding your real images...');
+            addYourImages();
+        }
+        
+        function goToPortfolio() {
+            window.location.href = 'index.html';
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testAnimation();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

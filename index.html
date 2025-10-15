@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио Художника</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Allura&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Портфолио</h1>
+            <p class="hero-welcome">Всем привет! На этой веб-странице вы можете познакомиться с моими разнообразными работами, если вас заинтересовали мои услуги, вы можете связаться со мной! Открывайте в себе новые эмоции в мире художества вместе со мной...</p>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+        <button class="back-to-top" onclick="goToTop()" title="Наверх">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+        <button class="admin-toggle" onclick="toggleAdminSection()" title="Управление галереей">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+            </svg>
+        </button>
+    </section>
+
+    <!-- Portraits Section -->
+    <section class="section" id="portraits">
+        <div class="section-title-container">
+            <h2 class="section-title">ПОРТРЕТЫ</h2>
+        </div>
+        <div class="gallery" id="portraits-gallery">
+            <!-- Изображения будут загружены автоматически из папки images/portraits -->
+        </div>
+    </section>
+
+    <!-- Landscapes Section -->
+    <section class="section" id="landscapes">
+        <div class="section-title-container">
+            <h2 class="section-title">ПЕЙЗАЖИ</h2>
+        </div>
+        <div class="gallery" id="landscapes-gallery">
+            <!-- Изображения будут загружены автоматически из папки images/landscapes -->
+        </div>
+    </section>
+
+    <!-- Characters Section -->
+    <section class="section" id="characters">
+        <div class="section-title-container">
+            <h2 class="section-title">ПЕРСОНАЖИ</h2>
+        </div>
+        <div class="gallery" id="characters-gallery">
+            <!-- Изображения будут загружены автоматически из папки images/characters -->
+        </div>
+    </section>
+
+    <!-- Tattoos Section -->
+    <section class="section" id="tattoos">
+        <div class="section-title-container">
+            <h2 class="section-title">ТАТУИРОВКИ</h2>
+        </div>
+        <div class="gallery" id="tattoos-gallery">
+            <!-- Изображения будут загружены автоматически из папки images/tattoos -->
+        </div>
+    </section>
+
+    <!-- Animals Section -->
+    <section class="section" id="animals">
+        <div class="section-title-container">
+            <h2 class="section-title">ЖИВОТНЫЕ</h2>
+        </div>
+        <div class="gallery" id="animals-gallery">
+            <!-- Изображения будут загружены автоматически из папки images/animals -->
+        </div>
+    </section>
+
+    <!-- Admin Section (hidden by default) -->
+    <section class="admin-section" id="admin-section" style="display: none;">
+        <div class="admin-content">
+            <h2 class="admin-title">Управление галереей</h2>
+            <p class="admin-text">Обновите галереи для отображения новых изображений</p>
+            <div class="admin-buttons">
+                <button class="admin-btn" onclick="forceLoadKnownImages()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span>Загрузить существующие</span>
+                </button>
+                <button class="admin-btn" onclick="refreshAllGalleries()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                        <path d="M3 21v-5h5"/>
+                    </svg>
+                    <span>Обновить все галереи</span>
+                </button>
+                <button class="admin-btn" onclick="instantRefresh()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 4v6h6"/>
+                        <path d="M23 20v-6h-6"/>
+                        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                    </svg>
+                    <span>Мгновенное обновление</span>
+                </button>
+                <button class="admin-btn" onclick="toggleImageMonitoring()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span id="monitoring-status">Мониторинг: ВКЛ</span>
+                </button>
+            </div>
+            <div class="admin-info">
+                <p>💡 <strong>Совет:</strong> Просто поместите новые изображения в соответствующие папки (images/portraits/, images/landscapes/, images/characters/, images/tattoos/, images/animals/) и они автоматически появятся на сайте!</p>
+                <p>⚡ <strong>Мгновенное обновление:</strong> Нажмите "Мгновенное обновление" для немедленного сканирования новых файлов</p>
+                <p>🔄 <strong>Автоматический мониторинг:</strong> Система проверяет новые файлы каждые 15 секунд</p>
+                <p>📁 <strong>Поддерживаемые форматы:</strong> JPG, JPEG, PNG, WebP, GIF</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="contact-content">
+            <h2 class="contact-title">Связаться со мной</h2>
+            <p class="contact-text">Готова к новым проектам</p>
+            <div class="contact-links">
+                <a href="https://t.me/shershulya030405" class="contact-link telegram-link" target="_blank">
+                    <svg class="telegram-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                    <span>Telegram</span>
+                </a>
+                <a href="https://wa.me/79282030304" class="contact-link whatsapp-link" target="_blank">
+                    <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                    </svg>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

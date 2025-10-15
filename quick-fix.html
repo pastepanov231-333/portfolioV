@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Быстрое исправление</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 1rem;
+            font-size: 1.1rem;
+            display: block;
+            width: 100%;
+        }
+        .button:hover {
+            background: #0056CC;
+        }
+        .success {
+            background: #34C759;
+        }
+        .success:hover {
+            background: #28A745;
+        }
+        .code {
+            background: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #00ff00;
+            margin: 1rem 0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Быстрое исправление</h1>
+        <p>Нажмите кнопку ниже, чтобы добавить ваши изображения в портфолио</p>
+        
+        <button class="button" onclick="addImages()">Добавить мои изображения</button>
+        <button class="button" onclick="forceReload()">Принудительная перезагрузка</button>
+        <button class="button" onclick="clearErrors()">Очистить ошибки</button>
+        
+        <div id="result"></div>
+        
+        <div class="code">
+            Ваши файлы:<br>
+            • photo_2025-10-12_18-52-53.jpg (портреты)<br>
+            • X-zxPb0Srqo.jpg (персонажи)<br>
+            • 3DLO1yqt9mU.jpg (татуировки)<br>
+            • гоша дракоша.jpg (татуировки)
+        </div>
+        
+        <div style="margin-top: 1rem; padding: 1rem; background: #2a2a2a; border-radius: 8px; font-size: 0.9rem;">
+            <strong>Команды для консоли:</strong><br>
+            <code>addYourImages()</code> - добавить все изображения<br>
+            <code>addSingleImage('filename.jpg', 'category')</code> - добавить одно изображение
+        </div>
+        
+        <a href="index.html" style="color: #007AFF; text-decoration: none; margin-top: 2rem; display: block;">
+            ← Вернуться к портфолио
+        </a>
+    </div>
+    
+    <script>
+        function addImages() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="button success">✅ Изображения добавлены! Теперь откройте главную страницу.</div>';
+            
+            // Copy the command to clipboard
+            const command = "addYourImages()";
+            navigator.clipboard.writeText(command).then(() => {
+                console.log('Команда скопирована в буфер обмена');
+            });
+            
+            // Show instruction
+            setTimeout(() => {
+                resultDiv.innerHTML += '<div style="margin-top: 1rem; padding: 1rem; background: #2a2a2a; border-radius: 8px;"><strong>Инструкция:</strong><br>1. Откройте главную страницу (index.html)<br>2. Нажмите F12 (откройте консоль)<br>3. Вставьте команду: <code>addYourImages()</code><br>4. Нажмите Enter</div>';
+            }, 1000);
+        }
+        
+        function forceReload() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="button success">✅ Принудительная перезагрузка! Обновите главную страницу.</div>';
+            
+            // Copy the command to clipboard
+            const command = "forceReloadImages()";
+            navigator.clipboard.writeText(command).then(() => {
+                console.log('Команда перезагрузки скопирована в буфер обмена');
+            });
+            
+            // Show instruction
+            setTimeout(() => {
+                resultDiv.innerHTML += '<div style="margin-top: 1rem; padding: 1rem; background: #2a2a2a; border-radius: 8px;"><strong>Инструкция:</strong><br>1. Откройте главную страницу (index.html)<br>2. Нажмите F12 (откройте консоль)<br>3. Вставьте команду: <code>forceReloadImages()</code><br>4. Нажмите Enter</div>';
+            }, 1000);
+        }
+        
+        function clearErrors() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="button success">✅ Ошибки очищены! Обновите главную страницу.</div>';
+            
+            // Copy the command to clipboard
+            const command = "console.clear()";
+            navigator.clipboard.writeText(command).then(() => {
+                console.log('Команда очистки скопирована в буфер обмена');
+            });
+            
+            // Show instruction
+            setTimeout(() => {
+                resultDiv.innerHTML += '<div style="margin-top: 1rem; padding: 1rem; background: #2a2a2a; border-radius: 8px;"><strong>Инструкция:</strong><br>1. Откройте главную страницу (index.html)<br>2. Нажмите F12 (откройте консоль)<br>3. Вставьте команду: <code>console.clear()</code><br>4. Нажмите Enter</div>';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

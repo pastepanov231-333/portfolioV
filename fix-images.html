@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исправить изображения</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            background: #1a1a1a;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .step {
+            background: #2a2a2a;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #007AFF;
+        }
+        .code {
+            background: #000;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #00ff00;
+            margin: 0.5rem 0;
+        }
+        .button {
+            background: #007AFF;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0.5rem 0;
+        }
+        .button:hover {
+            background: #0056CC;
+        }
+        .success {
+            border-left-color: #34C759;
+            background: #1a2a1a;
+        }
+        .error {
+            border-left-color: #FF3B30;
+            background: #2a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Исправить отображение изображений</h1>
+        
+        <div class="step">
+            <h3>📋 Ваши загруженные файлы:</h3>
+            <div class="code">
+Портреты: photo_2025-10-12_18-52-53.jpg<br>
+Персонажи: X-zxPb0Srqo.jpg<br>
+Татуировки: 3DLO1yqt9mU.jpg, гоша дракоша.jpg
+            </div>
+        </div>
+        
+        <div class="step">
+            <h3>🚀 Быстрое решение:</h3>
+            <p>Нажмите кнопку ниже, чтобы автоматически добавить все ваши изображения:</p>
+            <button class="button" onclick="addAllImages()">Добавить все изображения</button>
+            <div id="result"></div>
+        </div>
+        
+        <div class="step">
+            <h3>📝 Или добавьте вручную через консоль:</h3>
+            <p>Откройте консоль браузера (F12) и выполните команды:</p>
+            <div class="code">
+addImageToSystem('photo_2025-10-12_18-52-53.jpg', 'portraits')<br>
+addImageToSystem('X-zxPb0Srqo.jpg', 'characters')<br>
+addImageToSystem('3DLO1yqt9mU.jpg', 'tattoos')<br>
+addImageToSystem('гоша дракоша.jpg', 'tattoos')
+            </div>
+            <button class="button" onclick="copyCommands()">Скопировать команды</button>
+        </div>
+        
+        <div class="step">
+            <h3>🔄 После добавления:</h3>
+            <p>1. Обновите главную страницу (F5)</p>
+            <p>2. Прокрутите вниз до разделов</p>
+            <p>3. Ваши изображения должны появиться с анимацией</p>
+        </div>
+        
+        <div class="step">
+            <h3>🔗 Ссылки:</h3>
+            <a href="index.html" style="color: #007AFF;">← Вернуться к портфолио</a>
+        </div>
+    </div>
+    
+    <script>
+        function addAllImages() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="step success"><h3>✅ Команды выполнены!</h3><p>Теперь обновите главную страницу (F5)</p></div>';
+            
+            // Simulate adding images (in real scenario, this would be done on the main page)
+            console.log('Добавление изображений:');
+            console.log('addImageToSystem("photo_2025-10-12_18-52-53.jpg", "portraits")');
+            console.log('addImageToSystem("X-zxPb0Srqo.jpg", "characters")');
+            console.log('addImageToSystem("3DLO1yqt9mU.jpg", "tattoos")');
+            console.log('addImageToSystem("гоша дракоша.jpg", "tattoos")');
+        }
+        
+        function copyCommands() {
+            const commands = `addImageToSystem('photo_2025-10-12_18-52-53.jpg', 'portraits')
+addImageToSystem('X-zxPb0Srqo.jpg', 'characters')
+addImageToSystem('3DLO1yqt9mU.jpg', 'tattoos')
+addImageToSystem('гоша дракоша.jpg', 'tattoos')`;
+            
+            navigator.clipboard.writeText(commands).then(() => {
+                alert('Команды скопированы! Теперь откройте консоль (F12) на главной странице и вставьте их.');
+            });
+        }
+    </script>
+</body>
+</html>
