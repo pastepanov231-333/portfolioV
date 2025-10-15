@@ -15,7 +15,7 @@ const observer = new IntersectionObserver((entries) => {
                 // Then animate images in the same section after a delay
                 const section = entry.target.closest('.section');
                 if (section) {
-                    const artworks = section.querySelectorAll('.artwork');
+                    const artworks = section.querySelectorAll('.artwork:not(.animate)');
                     artworks.forEach((artwork, index) => {
                         setTimeout(() => {
                             artwork.classList.add('animate');
@@ -23,9 +23,8 @@ const observer = new IntersectionObserver((entries) => {
                     });
                 }
             } else if (entry.target.classList.contains('artwork')) {
-                // Only animate artwork if it's not in a section with a title
-                const section = entry.target.closest('.section');
-                if (section && !section.querySelector('.section-title.animate')) {
+                // Only animate individual artwork if it's not already animated
+                if (!entry.target.classList.contains('animate')) {
                     entry.target.classList.add('animate');
                 }
             }
@@ -403,7 +402,20 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'cover';
+            img.style.objectPosition = 'center';
             img.style.borderRadius = '12px';
+            img.style.backgroundColor = '#1a1a1a';
+            
+            // Add error handling for image loading
+            img.onerror = function() {
+                console.error(`❌ Failed to load image: ${imageData.src}`);
+                this.style.display = 'none';
+                artwork.innerHTML = '<div class="artwork-placeholder">Изображение не загружено</div>';
+            };
+            
+            img.onload = function() {
+                console.log(`✅ Successfully loaded image: ${imageData.src}`);
+            };
             
             artwork.appendChild(img);
             gallery.appendChild(artwork);
