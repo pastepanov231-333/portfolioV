@@ -560,13 +560,15 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             if (isProduction) {
                 const artworks = document.querySelectorAll('.artwork');
                 artworks.forEach((artwork, index) => {
-                    // Ensure visibility without blocking CSS animations
+                    // Ensure visibility
                     artwork.style.visibility = 'visible';
                     
-                    // Add animate class to trigger CSS animations
+                    // Create custom animation using inline styles for production
                     setTimeout(() => {
-                        artwork.classList.add('animate');
-                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
+                        // Animate to final position
+                        artwork.style.opacity = '1';
+                        artwork.style.transform = 'translateX(0)';
+                        console.log(`🚀 Production: Animated artwork ${index} to final position`);
                     }, index * 200); // Stagger the animations
                 });
             }
