@@ -16,7 +16,7 @@ html, body {
 }
 
 body {
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: #000;
     color: #fff;
     overflow-x: hidden;
@@ -59,7 +59,7 @@ body {
 }
 
 .hero-welcome {
-    font-family: 'Dancing Script', 'Great Vibes', 'Allura', 'Brush Script MT', cursive;
+    font-family: 'Brush Script MT', 'Lucida Handwriting', cursive, serif;
     font-size: clamp(1.4rem, 3.5vw, 2.2rem);
     font-weight: 500;
     color: #fff;
@@ -243,6 +243,20 @@ body {
     transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
     border: 1px solid #333;
+    min-height: 200px;
+    min-width: 150px;
+}
+
+/* Debug styles for production */
+.artwork img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 12px !important;
+    transition: transform 0.3s ease !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .artwork:nth-child(even) {
@@ -250,12 +264,19 @@ body {
 }
 
 .artwork.animate {
-    opacity: 1;
-    transform: translateX(0);
+    opacity: 1 !important;
+    transform: translateX(0) !important;
 }
 
 .artwork.animate:nth-child(even) {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+}
+
+/* Force visibility for production debugging */
+.artwork.animate img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
 }
 
 .artwork:hover {

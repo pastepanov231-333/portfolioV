@@ -493,11 +493,22 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             artwork.setAttribute('data-category', galleryId.replace('-gallery', ''));
             artwork.setAttribute('data-src', imageData.src); // Add data attribute for tracking
             
-            // Set initial state for smooth animation
-            const isEven = index % 2 === 0;
-            const startX = isEven ? -150 : 150;
-            artwork.style.transform = `translateX(${startX}px)`;
-            artwork.style.opacity = '0';
+            // For production, force immediate visibility
+            const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+            
+            if (isProduction) {
+                // Force immediate visibility in production
+                artwork.style.opacity = '1';
+                artwork.style.transform = 'translateX(0)';
+                artwork.classList.add('animate');
+                console.log(`🚀 Production: Forcing visibility for ${imageData.src}`);
+            } else {
+                // Set initial state for smooth animation in development
+                const isEven = index % 2 === 0;
+                const startX = isEven ? -150 : 150;
+                artwork.style.transform = `translateX(${startX}px)`;
+                artwork.style.opacity = '0';
+            }
             
             const img = document.createElement('img');
             img.src = imageData.src;
@@ -507,6 +518,13 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             img.style.objectFit = 'cover';
             img.style.borderRadius = '12px';
             img.style.transition = 'transform 0.3s ease';
+            
+            // Force image visibility in production
+            if (isProduction) {
+                img.style.opacity = '1';
+                img.style.visibility = 'visible';
+                img.style.display = 'block';
+            }
             
             artwork.appendChild(img);
             gallery.appendChild(artwork);
