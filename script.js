@@ -291,85 +291,6 @@ async function discoverImagesInFolder(folderPath, galleryId) {
         const knownImages = knownExistingImages[galleryId] || [];
         console.log(`🔧 Development mode: Loading ${knownImages.length} known images for ${galleryId}`);
         return knownImages;
-    }
-    for (const imageName of knownImages) {
-        const imagePath = `${folderPath}${imageName}`;
-        const exists = await checkImageExists(imagePath);
-        if (exists && !discoveredImages.includes(imageName)) {
-            discoveredImages.push(imageName);
-            console.log(`✅ Found known image: ${imageName}`);
-        }
-    }
-    
-    // Then try common patterns for new images (limited to avoid performance issues)
-    const imageExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-    const commonPrefixes = ['photo', 'img', 'image', 'pic', 'work', 'art', 'IMG', 'DSC'];
-    
-    // Try different naming patterns (limited range)
-    for (let i = 1; i <= 20; i++) {
-        for (const prefix of commonPrefixes) {
-            for (const ext of imageExtensions) {
-                const patterns = [
-                    `${prefix}_${i}.${ext}`,
-                    `${prefix}_${i.toString().padStart(2, '0')}.${ext}`,
-                    `${prefix}${i}.${ext}`,
-                    `${prefix}${i.toString().padStart(2, '0')}.${ext}`,
-                    `${prefix}-${i}.${ext}`,
-                    `${prefix}-${i.toString().padStart(2, '0')}.${ext}`
-                ];
-                
-                for (const pattern of patterns) {
-                    const imagePath = `${folderPath}${pattern}`;
-                    const exists = await checkImageExists(imagePath);
-                    if (exists && !discoveredImages.includes(pattern)) {
-                        discoveredImages.push(pattern);
-                        console.log(`✅ Found new image: ${pattern}`);
-                    }
-                }
-            }
-        }
-    }
-    
-    // Try common names and patterns
-    const commonNames = [
-        'image.jpg', 'photo.jpg', 'pic.jpg', 'work.jpg', 'art.jpg',
-        '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg',
-        '01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg',
-        'test.jpg', 'new.jpg', 'latest.jpg',
-        // Add more specific patterns for your files
-        'photo_2025-10-15_23-59-26.jpg',
-        'photo_2025-10-15_23-59-31.jpg',
-        'photo_2025-10-15_15-37-03.jpg'
-    ];
-    
-    for (const name of commonNames) {
-        const imagePath = `${folderPath}${name}`;
-        const exists = await checkImageExists(imagePath);
-        if (exists && !discoveredImages.includes(name)) {
-            discoveredImages.push(name);
-            console.log(`✅ Found common name image: ${name}`);
-        }
-    }
-    
-    // Also try any images that might be in localStorage
-    const storedImages = getStoredImages(galleryId);
-    for (const img of storedImages) {
-        if (!discoveredImages.includes(img)) {
-            const imagePath = `${folderPath}${img}`;
-            const exists = await checkImageExists(imagePath);
-            if (exists) {
-                discoveredImages.push(img);
-                console.log(`✅ Found stored image: ${img}`);
-            }
-        }
-    }
-    
-        // Store discovered images
-        window.discoveredImages[galleryId] = discoveredImages;
-        storeImages(galleryId, discoveredImages);
-        
-        console.log(`🔍 Discovered ${discoveredImages.length} images in ${galleryId}:`, discoveredImages);
-        return discoveredImages;
     } catch (error) {
         console.error(`Error discovering images in ${galleryId}:`, error);
         return [];
@@ -425,86 +346,30 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         
         const loadedImages = [];
         
-        // First, try to discover images in the folder
+        // Get known images for this gallery
         const discoveredImages = await discoverImagesInFolder(folderPath, galleryId);
         
-        // Also check for manually added images
-        const manualImages = window.knownImages?.[galleryId] || [];
-        const allImagesToTry = [...new Set([...discoveredImages, ...manualImages])];
+        console.log(`🔍 Loading ${discoveredImages.length} images for ${galleryId}:`, discoveredImages);
         
-        console.log(`🔍 Trying to load ${allImagesToTry.length} images for ${galleryId}:`, allImagesToTry);
-        
-        // Track loaded image paths to avoid duplicates
-        const loadedImagePaths = new Set();
-        
-        // For production, load images directly without checking existence
-        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-        
-        for (const imageName of allImagesToTry) {
+        // Load images directly (simplified approach)
+        for (const imageName of discoveredImages) {
             const imagePath = `${folderPath}${imageName}`;
             
-            // Skip if already loaded
-            if (loadedImagePaths.has(imagePath)) {
-                console.log(`Skipping duplicate path: ${imagePath}`);
-                continue;
-            }
-            
-            if (isProduction) {
-                // In production, assume images exist and load them directly
-                loadedImagePaths.add(imagePath);
-                loadedImages.push({
-                    src: imagePath,
-                    alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
-                });
-                console.log(`✅ Production: Added ${imagePath}`);
-            } else {
-                // In development, check if image exists
-                const img = new Image();
-                
-                await new Promise((resolve) => {
-                    const timeout = setTimeout(() => {
-                        console.log(`⏰ Timeout loading: ${imagePath}`);
-                        resolve();
-                    }, 10000); // 10 second timeout
-                    
-                    img.onload = () => {
-                        clearTimeout(timeout);
-                        if (!loadedImagePaths.has(imagePath)) {
-                            loadedImagePaths.add(imagePath);
-                            loadedImages.push({
-                                src: imagePath,
-                                alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
-                            });
-                            console.log(`✅ Loaded: ${imagePath}`); // Success log
-                        }
-                        resolve();
-                    };
-                    img.onerror = () => {
-                        clearTimeout(timeout);
-                        console.log(`❌ Failed to load: ${imagePath}`); // Error log
-                        resolve(); // Skip if image doesn't exist
-                    };
-                    img.src = imagePath;
-                });
-            }
+            loadedImages.push({
+                src: imagePath,
+                alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
+            });
+            console.log(`✅ Added ${imagePath}`);
         }
         
-        // Create artwork elements for loaded images (avoid duplicates)
-        const existingImages = new Set();
+        // Create artwork elements for loaded images
         loadedImages.forEach((imageData, index) => {
-            // Check if this image is already displayed
-            if (existingImages.has(imageData.src)) {
-                console.log(`Skipping duplicate image: ${imageData.src}`);
-                return;
-            }
-            existingImages.add(imageData.src);
-            
             const artwork = document.createElement('div');
             artwork.className = 'artwork';
             artwork.setAttribute('data-category', galleryId.replace('-gallery', ''));
-            artwork.setAttribute('data-src', imageData.src); // Add data attribute for tracking
+            artwork.setAttribute('data-src', imageData.src);
             
-            // Set initial state for smooth animation (works in both dev and production)
+            // Set initial state for animation
             const isEven = index % 2 === 0;
             const startX = isEven ? -150 : 150;
             artwork.style.transform = `translateX(${startX}px)`;
@@ -518,25 +383,9 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             img.style.height = '100%';
             img.style.objectFit = 'cover';
             img.style.borderRadius = '12px';
-            img.style.transition = 'transform 0.3s ease';
-            
-            // Image styles are handled by CSS
             
             artwork.appendChild(img);
             gallery.appendChild(artwork);
-            
-            // Add hover effects
-            artwork.addEventListener('mouseenter', () => {
-                if (artwork.classList.contains('animate')) {
-                    artwork.style.transform = 'translateY(-10px) scale(1.02)';
-                }
-            });
-            
-            artwork.addEventListener('mouseleave', () => {
-                if (artwork.classList.contains('animate')) {
-                    artwork.style.transform = 'translateX(0) scale(1)';
-                }
-            });
         });
         
         // If no images were loaded, show placeholder
