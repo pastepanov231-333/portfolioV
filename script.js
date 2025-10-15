@@ -506,6 +506,7 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             const startX = isEven ? -150 : 150;
             artwork.style.transform = `translateX(${startX}px)`;
             artwork.style.opacity = '0';
+            artwork.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
             
             const img = document.createElement('img');
             img.src = imageData.src;
@@ -554,18 +555,18 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         setTimeout(() => {
             initializeObservers();
             
-            // Force animation for images in production
+            // Force visibility and animation for images in production
             const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
             if (isProduction) {
                 const artworks = document.querySelectorAll('.artwork');
                 artworks.forEach((artwork, index) => {
+                    // Ensure visibility without blocking CSS animations
+                    artwork.style.visibility = 'visible';
+                    
+                    // Add animate class to trigger CSS animations
                     setTimeout(() => {
                         artwork.classList.add('animate');
-                        // Force inline styles to ensure visibility
-                        artwork.style.opacity = '1';
-                        artwork.style.transform = 'translateX(0)';
-                        artwork.style.visibility = 'visible';
-                        console.log(`🚀 Production: Forced animation for artwork ${index}`);
+                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
                     }, index * 200); // Stagger the animations
                 });
             }
