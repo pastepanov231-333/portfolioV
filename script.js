@@ -271,6 +271,13 @@ async function discoverImagesInFolder(folderPath, galleryId) {
                 'photo_2025-10-15_23-59-31.jpg'
             ]
         };
+        
+        // For production (Netlify), just return the known images
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            const knownImages = knownExistingImages[galleryId] || [];
+            console.log(`🌐 Production mode: Loading ${knownImages.length} known images for ${galleryId}`);
+            return knownImages;
+        }
     
     // First, try known existing images
     const knownImages = knownExistingImages[galleryId] || [];
@@ -419,6 +426,9 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         // Track loaded image paths to avoid duplicates
         const loadedImagePaths = new Set();
         
+        // For production, load images directly without checking existence
+        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        
         for (const imageName of allImagesToTry) {
             const imagePath = `${folderPath}${imageName}`;
             
@@ -428,33 +438,44 @@ async function loadImagesFromFolder(folderPath, galleryId) {
                 continue;
             }
             
-            const img = new Image();
-            
-            await new Promise((resolve) => {
-                const timeout = setTimeout(() => {
-                    console.log(`⏰ Timeout loading: ${imagePath}`);
-                    resolve();
-                }, 10000); // 10 second timeout
+            if (isProduction) {
+                // In production, assume images exist and load them directly
+                loadedImagePaths.add(imagePath);
+                loadedImages.push({
+                    src: imagePath,
+                    alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
+                });
+                console.log(`✅ Production: Added ${imagePath}`);
+            } else {
+                // In development, check if image exists
+                const img = new Image();
                 
-                img.onload = () => {
-                    clearTimeout(timeout);
-                    if (!loadedImagePaths.has(imagePath)) {
-                        loadedImagePaths.add(imagePath);
-                        loadedImages.push({
-                            src: imagePath,
-                            alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
-                        });
-                        console.log(`✅ Loaded: ${imagePath}`); // Success log
-                    }
-                    resolve();
-                };
-                img.onerror = () => {
-                    clearTimeout(timeout);
-                    console.log(`❌ Failed to load: ${imagePath}`); // Error log
-                    resolve(); // Skip if image doesn't exist
-                };
-                img.src = imagePath;
-            });
+                await new Promise((resolve) => {
+                    const timeout = setTimeout(() => {
+                        console.log(`⏰ Timeout loading: ${imagePath}`);
+                        resolve();
+                    }, 10000); // 10 second timeout
+                    
+                    img.onload = () => {
+                        clearTimeout(timeout);
+                        if (!loadedImagePaths.has(imagePath)) {
+                            loadedImagePaths.add(imagePath);
+                            loadedImages.push({
+                                src: imagePath,
+                                alt: imageName.replace(/\.[^/.]+$/, "") // Remove extension for alt text
+                            });
+                            console.log(`✅ Loaded: ${imagePath}`); // Success log
+                        }
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        clearTimeout(timeout);
+                        console.log(`❌ Failed to load: ${imagePath}`); // Error log
+                        resolve(); // Skip if image doesn't exist
+                    };
+                    img.src = imagePath;
+                });
+            }
         }
         
         // Create artwork elements for loaded images (avoid duplicates)
@@ -906,8 +927,12 @@ function scrollToTop() {
 // Initialize image loading
 loadAllImagesWithDiscovery();
 
-// Start monitoring for new images
-startImageMonitoring();
+// Start monitoring for new images (only in development)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    startImageMonitoring();
+} else {
+    console.log('🌐 Production mode: Image monitoring disabled');
+}
 
 // Add drag and drop support
 addDragAndDropSupport();
