@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             heroSubtitle.style.animation = 'fadeInUp 1.2s ease-out 0.3s both';
         }, 100);
     }
-);
+});
 
 // Enhanced scroll animations with smooth scrolling synchronization
 let ticking = false;
@@ -286,9 +286,12 @@ async function discoverImagesInFolder(folderPath, galleryId) {
             console.log(`🌐 Production mode: Loading ${knownImages.length} known images for ${galleryId}`);
             return knownImages;
         }
-    
-    // First, try known existing images
-    const knownImages = knownExistingImages[galleryId] || [];
+        
+        // For development, also just use known images to simplify
+        const knownImages = knownExistingImages[galleryId] || [];
+        console.log(`🔧 Development mode: Loading ${knownImages.length} known images for ${galleryId}`);
+        return knownImages;
+    }
     for (const imageName of knownImages) {
         const imagePath = `${folderPath}${imageName}`;
         const exists = await checkImageExists(imagePath);
