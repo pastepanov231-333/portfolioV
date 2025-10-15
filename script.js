@@ -8,7 +8,27 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
+            if (entry.target.classList.contains('section-title')) {
+                // Animate title first
+                entry.target.classList.add('animate');
+                
+                // Then animate images in the same section after a delay
+                const section = entry.target.closest('.section');
+                if (section) {
+                    const artworks = section.querySelectorAll('.artwork');
+                    artworks.forEach((artwork, index) => {
+                        setTimeout(() => {
+                            artwork.classList.add('animate');
+                        }, 500 + (index * 200)); // 500ms delay after title, then 200ms between images
+                    });
+                }
+            } else if (entry.target.classList.contains('artwork')) {
+                // Only animate artwork if it's not in a section with a title
+                const section = entry.target.closest('.section');
+                if (section && !section.querySelector('.section-title.animate')) {
+                    entry.target.classList.add('animate');
+                }
+            }
         }
     });
 }, observerOptions);
@@ -369,11 +389,13 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             artwork.setAttribute('data-category', galleryId.replace('-gallery', ''));
             artwork.setAttribute('data-src', imageData.src);
             
-            // Set initial state for animation (let CSS handle transitions)
+            // Set initial state for animation using CSS classes
             const isEven = index % 2 === 0;
-            const startX = isEven ? -150 : 150;
-            artwork.style.transform = `translateX(${startX}px)`;
-            artwork.style.opacity = '0';
+            if (isEven) {
+                artwork.classList.add('artwork-left');
+            } else {
+                artwork.classList.add('artwork-right');
+            }
             
             const img = document.createElement('img');
             img.src = imageData.src;
@@ -406,21 +428,8 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         setTimeout(() => {
             initializeObservers();
             
-            // Force visibility for images in production, let CSS animations work
-            const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-            if (isProduction) {
-                const artworks = document.querySelectorAll('.artwork');
-                artworks.forEach((artwork, index) => {
-                    // Only ensure visibility, let CSS animations handle the rest
-                    artwork.style.visibility = 'visible';
-                    
-                    // Add animate class to trigger CSS animations (same as titles)
-                    setTimeout(() => {
-                        artwork.classList.add('animate');
-                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
-                    }, index * 200); // Stagger the animations
-                });
-            }
+            // Let Intersection Observer handle all animations (both dev and production)
+            console.log(`🎬 Images ready for scroll animation`);
         }, 100);
         
     } catch (error) {
