@@ -369,12 +369,11 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             artwork.setAttribute('data-category', galleryId.replace('-gallery', ''));
             artwork.setAttribute('data-src', imageData.src);
             
-            // Set initial state for animation
+            // Set initial state for animation (let CSS handle transitions)
             const isEven = index % 2 === 0;
             const startX = isEven ? -150 : 150;
             artwork.style.transform = `translateX(${startX}px)`;
             artwork.style.opacity = '0';
-            artwork.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
             
             const img = document.createElement('img');
             img.src = imageData.src;
@@ -407,20 +406,18 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         setTimeout(() => {
             initializeObservers();
             
-            // Force visibility and animation for images in production
+            // Force visibility for images in production, let CSS animations work
             const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
             if (isProduction) {
                 const artworks = document.querySelectorAll('.artwork');
                 artworks.forEach((artwork, index) => {
-                    // Ensure visibility
+                    // Only ensure visibility, let CSS animations handle the rest
                     artwork.style.visibility = 'visible';
                     
-                    // Force animation with inline styles for production
+                    // Add animate class to trigger CSS animations (same as titles)
                     setTimeout(() => {
-                        artwork.style.opacity = '1';
-                        artwork.style.transform = 'translateX(0)';
                         artwork.classList.add('animate');
-                        console.log(`🚀 Production: Animated artwork ${index} to final position`);
+                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
                     }, index * 200); // Stagger the animations
                 });
             }
