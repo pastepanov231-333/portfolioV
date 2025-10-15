@@ -59,7 +59,7 @@ body {
 }
 
 .hero-welcome {
-    font-family: 'Dancing Script', 'Great Vibes', 'Allura', 'Brush Script MT', 'Lucida Handwriting', cursive, serif;
+    font-family: 'Dancing Script', 'Great Vibes', 'Allura', 'Brush Script MT', 'Lucida Handwriting', cursive, serif !important;
     font-size: clamp(1.4rem, 3.5vw, 2.2rem);
     font-weight: 500;
     color: #fff;
