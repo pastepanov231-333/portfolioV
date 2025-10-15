@@ -1,4 +1,4 @@
-// Intersection Observer for animations
+// Intersection Observer for animations - Fixed syntax error
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
