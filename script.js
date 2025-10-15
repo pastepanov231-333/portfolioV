@@ -407,18 +407,20 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         setTimeout(() => {
             initializeObservers();
             
-            // Force visibility for images in production, but let CSS animations work
+            // Force visibility and animation for images in production
             const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
             if (isProduction) {
                 const artworks = document.querySelectorAll('.artwork');
                 artworks.forEach((artwork, index) => {
-                    // Only ensure visibility, let CSS animations handle the rest
+                    // Ensure visibility
                     artwork.style.visibility = 'visible';
                     
-                    // Add animate class to trigger CSS animations (same as titles)
+                    // Force animation with inline styles for production
                     setTimeout(() => {
+                        artwork.style.opacity = '1';
+                        artwork.style.transform = 'translateX(0)';
                         artwork.classList.add('animate');
-                        console.log(`🚀 Production: Added animate class for artwork ${index}`);
+                        console.log(`🚀 Production: Animated artwork ${index} to final position`);
                     }, index * 200); // Stagger the animations
                 });
             }
