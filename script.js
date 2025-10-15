@@ -13,8 +13,8 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe section titles
-document.addEventListener('DOMContentLoaded', () => {
+// Function to initialize observers for elements
+function initializeObservers() {
     const sectionTitles = document.querySelectorAll('.section-title');
     const artworks = document.querySelectorAll('.artwork');
     
@@ -30,6 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add delay for staggered effect
         artwork.style.transitionDelay = `${index * 0.1}s`;
     });
+    
+    console.log(`🔍 Initialized observers for ${sectionTitles.length} titles and ${artworks.length} artworks`);
+}
+
+// Initialize observers when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initializeObservers();
+});
     
     // Smooth scroll for scroll indicator
     const scrollIndicator = document.querySelector('.scroll-indicator');
@@ -493,22 +501,11 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             artwork.setAttribute('data-category', galleryId.replace('-gallery', ''));
             artwork.setAttribute('data-src', imageData.src); // Add data attribute for tracking
             
-            // For production, force immediate visibility
-            const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-            
-            if (isProduction) {
-                // Force immediate visibility in production
-                artwork.style.opacity = '1';
-                artwork.style.transform = 'translateX(0)';
-                artwork.classList.add('animate');
-                console.log(`🚀 Production: Forcing visibility for ${imageData.src}`);
-            } else {
-                // Set initial state for smooth animation in development
-                const isEven = index % 2 === 0;
-                const startX = isEven ? -150 : 150;
-                artwork.style.transform = `translateX(${startX}px)`;
-                artwork.style.opacity = '0';
-            }
+            // Set initial state for smooth animation (works in both dev and production)
+            const isEven = index % 2 === 0;
+            const startX = isEven ? -150 : 150;
+            artwork.style.transform = `translateX(${startX}px)`;
+            artwork.style.opacity = '0';
             
             const img = document.createElement('img');
             img.src = imageData.src;
@@ -519,12 +516,7 @@ async function loadImagesFromFolder(folderPath, galleryId) {
             img.style.borderRadius = '12px';
             img.style.transition = 'transform 0.3s ease';
             
-            // Force image visibility in production
-            if (isProduction) {
-                img.style.opacity = '1';
-                img.style.visibility = 'visible';
-                img.style.display = 'block';
-            }
+            // Image styles are handled by CSS
             
             artwork.appendChild(img);
             gallery.appendChild(artwork);
@@ -557,6 +549,11 @@ async function loadImagesFromFolder(folderPath, galleryId) {
         } else {
             console.log(`✅ Loaded ${loadedImages.length} images in ${galleryId}`);
         }
+        
+        // Reinitialize observers after images are loaded
+        setTimeout(() => {
+            initializeObservers();
+        }, 100);
         
     } catch (error) {
         console.log(`Ошибка загрузки изображений из ${folderPath}:`, error);
@@ -651,8 +648,14 @@ async function refreshAllGalleries() {
     
     // Reset animations
     const sectionTitles = document.querySelectorAll('.section-title');
+    const artworks = document.querySelectorAll('.artwork');
+    
     sectionTitles.forEach(title => {
         title.classList.remove('animate');
+    });
+    
+    artworks.forEach(artwork => {
+        artwork.classList.remove('animate');
     });
     
     // Reload all images
@@ -661,6 +664,7 @@ async function refreshAllGalleries() {
     // Reapply animations
     setTimeout(() => {
         updateScrollAnimations();
+        initializeObservers();
     }, 100);
     
     console.log('✅ All galleries refreshed!');
@@ -976,6 +980,12 @@ function applyAnimationsToNewImages() {
         const startX = isEven ? -150 : 150;
         artwork.style.transform = `translateX(${startX}px)`;
         artwork.style.opacity = '0';
+        
+        // Add transition delay for staggered effect
+        artwork.style.transitionDelay = `${index * 0.1}s`;
+        
+        // Observe the artwork for animation
+        observer.observe(artwork);
     });
     console.log(`✅ Applied animations to ${artworks.length} new images`);
 }
