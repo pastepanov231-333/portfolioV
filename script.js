@@ -561,6 +561,10 @@ async function loadImagesFromFolder(folderPath, galleryId) {
                 artworks.forEach((artwork, index) => {
                     setTimeout(() => {
                         artwork.classList.add('animate');
+                        // Force inline styles to ensure visibility
+                        artwork.style.opacity = '1';
+                        artwork.style.transform = 'translateX(0)';
+                        artwork.style.visibility = 'visible';
                         console.log(`🚀 Production: Forced animation for artwork ${index}`);
                     }, index * 200); // Stagger the animations
                 });
